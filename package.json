@@ -1,0 +1,34 @@
+{
+  "name": "sindri-migration",
+  "version": "0.1.0",
+  "description": "Gera Migração automatica baseado em schema",
+  "main": "index.js",
+  "dependencies": {
+    "bluebird": "^3.4.1",
+    "colors": "^1.1.2",
+    "eyes": "^0.1.8",
+    "inquirer": "^1.1.1",
+    "js-yaml": "^3.6.1",
+    "lodash": "^4.13.1",
+    "sindri-cli": "^0.1.5"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/andregt/sindri-migration.git"
+  },
+  "keywords": [
+    "migration",
+    "db",
+    "schema"
+  ],
+  "author": "André Timermann",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/andregt/sindri-migration/issues"
+  },
+  "homepage": "https://github.com/andregt/sindri-migration#readme"
+}
