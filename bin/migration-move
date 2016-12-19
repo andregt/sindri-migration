@@ -1,0 +1,7 @@
+
+
+// Move Banco de dados de um host para outro
+
+// Deve ser especificado o novo host
+
+// Faz migração e salva nova configuração do banco (avisa q vai perder a configuração antiga, ou faz backup)
