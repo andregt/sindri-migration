@@ -1,0 +1,80 @@
+#!/usr/bin/env node
+
+/**
+ * Created by André Timermann on 16/12/16.
+ *
+ * Reinicia Estado da Base de dados para uma versão especifica sem realizar migração
+ *
+ * Ações:
+ * - Executa Backup da Base
+ * - Carrega Schema Alvo
+ * - Drop e Create da Base de dados
+ * - Executa Schema
+ * - Carrega Dados Iniciais
+ *
+ *
+ */
+'use strict';
+
+const Migration = require('../lib/migration');
+
+const Logger = require('../lib/util/logger');
+
+const chalk = require('chalk');
+
+const program = require('commander');
+
+program
+    .version(require('../package').version)
+    .description('Reinicia Estado da Base de dados para uma versão especifica sem realizar migração. (Todos os dados são perdidos)')
+    .option('-d, --debug', 'Modo Depuração.')
+    .option('-o, --output <file>', 'Salva SQL em um arquivo')
+    .option('-p, --path <directory>', 'Diretório de migração. Padrão: ./data')
+    .option('-q, --quiet', 'Modo quieto, assume resposta padrão')
+    .option('-r, --revision <id>', 'Reinicia estado para revisão especificada. Padrão: 1')
+    .option('-s, --sql', 'Imprime SQL')
+    .option('-E, --no-persist', 'Salva dados na base')
+    .option('-t, --trace', 'Modo Rastreamento (mais verboso)')
+    .option('--no-drop-database', 'Base de dados não será removido. (Usado quando usuário não tem permissão)')
+    .parse(process.argv);
+
+
+let level;
+if (program.debug) level = 'DEBUG';
+if (program.trace) level = 'TRACE';
+
+
+let logger = new Logger(null, level);
+logger.category = 'MigrationReset';
+
+
+let migration = new Migration({
+    logger: logger,
+    dataPath: program.path,
+    debug: program.debug || program.trace
+});
+
+migration
+    .reset({
+        showSql: program.sql || !program.persist,
+        persist: program.persist,
+        output: program.output,
+        dropDatabase: program.dropDatabase,
+        quiet: program.quiet,
+        revision: program.revision
+    })
+    .catch(err => {
+
+        logger.error(chalk.red.bold(err.message));
+
+        logger.debug('------ ERRO ------');
+        logger.debug(err.message);
+        logger.debug('------ STACK ------');
+        logger.debug(err.stack);
+        logger.debug('-------------------');
+
+    });
+
+
+
+

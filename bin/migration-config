@@ -1,0 +1,104 @@
+#!/usr/bin/env node
+/**
+ * Created by André Timermann on 18/12/16.
+ *
+ * Configura Dados de Acessoa o Banco de dados
+ *
+ */
+'use strict';
+
+const inquirer = require('inquirer');
+
+const program = require('commander');
+const chalk = require('chalk');
+
+const Logger = require('../lib/util/logger');
+let logger = new Logger();
+
+const Migration = require('../lib/migration');
+
+logger.category = 'MigrationConfig';
+
+program
+    .version(require('../package').version)
+    .description('Define Parâmetros do Banco de dados')
+    .parse(process.argv);
+
+
+let migration = new Migration();
+
+
+console.log(chalk.magenta.bold('------------------------- Sindri Migration - Status Atual -------------------------\n'));
+
+
+migration.validate()
+    .then(() => {
+
+
+        inquirer.prompt([
+            {
+                type: 'list',
+                name: 'sgbd',
+                message: 'Selecione o SGBD:',
+                default: 'mysql',
+                choices: ['mysql', 'pg', 'sqlite3', 'oracle', 'mssql']
+            },
+            {
+                type: 'list',
+                name: 'connectionType',
+                message: 'Selecione a forma de conexão com a base de dados:',
+                default: 'Host',
+                choices: ['Host', 'Socket']
+            },
+            {
+                type: 'input',
+                name: 'socketPath',
+                message: 'Caminho Socket ex. /path/to/socket.sock:',
+                when: answers => answers.connectionType == 'Socket',
+                validate: input => input ? true : 'Campo Obrigatório'
+            },
+
+            {
+                type: 'input',
+                name: 'host',
+                message: 'Host:',
+                default: 'localhost',
+                when: answers => answers.connectionType == 'Host',
+                validate: input => input ? true : 'Campo Obrigatório'
+            },
+
+            {
+                type: 'input',
+                name: 'database',
+                message: 'Database:',
+                validate: input => input ? true : 'Campo Obrigatório'
+            },
+            {
+                type: 'input',
+                name: 'port',
+                message: 'Porta:',
+                default: 3306,
+                validate: input => input ? true : 'Campo Obrigatório'
+            },
+            {
+                type: 'input',
+                name: 'user',
+                message: 'Usuário:',
+                validate: input => input ? true : 'Campo Obrigatório'
+            },
+            {
+                type: 'password',
+                name: 'password',
+                message: 'Senha:',
+                validate: input => input ? true : 'Campo Obrigatório'
+            }
+
+        ]).then(answers => {
+
+            delete answers.connectionType;
+            migration.saveConfig(answers);
+
+        });
+
+
+    });

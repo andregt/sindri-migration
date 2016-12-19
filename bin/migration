@@ -1,0 +1,113 @@
+#!/usr/bin/env node
+/**
+ * Inicializa aplicação com UI para gerenciar migração
+ *
+ */
+'use strict';
+
+
+const program = require('commander');
+const chalk = require('chalk');
+
+
+// Para cada comando deve ser executado program independentemente
+program
+    .version(require('../package').version)
+    // Para chamar um subcomando  descrição deve estar na chamada command
+    .command('create', 'Cria uma nova migração, nova versão da base de dados')
+    .command('status', 'Exibe relatório com status atual da migração')
+    .command('list', 'Lista todas as reviões disponíveis')
+    .command('reset', 'Reinicia Estado da Base de dados para uma versão especifica sem realizar migração (Perde todos os dados')
+    .command('up', 'Inicia processo de migração para próxima versão')
+    .command('config', 'Define parâmetros da base de dados');
+
+// Deve ser executado posteriormente (não encadear)
+program.parse(process.argv);
+
+
+// console.log(' size: %j', program.size);
+// console.log(' drink: %j', program.drink);
+
+
+// TODO: Seguir padrão do Vuejs para criar script
+
+// Scripts a serem criados:
+// dia2yaml (Script para converter DIA para YAML) ok Funcionando
+// init (Criar Estrutura de diretório)
+// create-migration
+// run-migration
+
+// Algoritmo
+
+/*
+
+ 1) Cria Versão do Modelo atual no formato (Baseado no YAML):
+ schema-[DATA:YYYYMMDDHHmmSS]-[NUMERO SEQUENCIAL DE 5 DIGITOS].json
+
+ 2) Verifica se é a primeira versão, caso negativo, cria um arquivo de diff da versão anterior para a nova no formato:
+ migration-00001-00002.js
+
+ 3) Cria um script de conversão com prototipo da função para o usuário implementar as conversões
+
+ TIPOS DE CONVERSÔES:
+
+ a) Coluna Nova
+ b) Coluna Removida
+ c) Tipo Mudou
+ d) Tamanho Mudou
+ e) NotNUll Mudou
+ f) Valor Padrão Mudou
+ g) Novo Indice Unico
+ 1- Função que recebe todos os valores
+ 2- Função que recebe apenas valores repetidos
+ 3- Função que é chamada várias vezes com um valor
+
+ h) Nova Tabela
+ - Não faz nada tabela vazia.
+ - Opção de adicionar registros que serão cadastrado inicialmente
+ Talvez seja necessário criar um registro padrão para usar em relacionamentos obrigatórios
+
+ g) Novo Relacionamento
+ - Se o relacionamento for obrigatório(1-N), será necessário definir um valor padrão para ser usado
+ - Se a tabela externa estiver vazia, necessário definir registro inicial (ver h)
+
+
+
+ 4) Gerar Up and Down
+
+
+ // run-migration
+ // - Cria recomendação para não usar a mesma base de dados, deve ser possível reverter migração facilmente e de forma segura
+ // - Faz Dump de todos os dados da base em arquivo json, salva no disco
+ // - Criar Progresso
+ // - Validar Erros
+ // - Criar sempre com transação, para em caso de erro possibilitar roolback simples
+
+
+
+ */
+
+//
+// const MigrationCreator = require('../lib/migrationCreator');
+//
+// let migrationCreator = new MigrationCreator();
+//
+// migrationCreator.create()
+//     .then(() => {
+//
+//         console.log('----- EXECUÇÃO FINALIZADA COM SUCESSO -----');
+//
+//     })
+//     .catch(err => {
+//
+//         console.log('------ ERRO ------');
+//         console.log(err.message);
+//         console.log(err.stack);
+//         console.log('------ ERRO ------');
+//
+//
+//     });
+//
+//
+//
+//

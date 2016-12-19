@@ -1,0 +1,91 @@
+#!/usr/bin/env node
+/**
+ * Created by André Timermann on 16/12/16.
+ *
+ * Imprime Status atual a migração
+ * Use Lista para imprimir uma lista detalhada das revisões
+ *
+ */
+'use strict';
+
+
+const program = require('commander');
+const chalk = require('chalk');
+
+const Logger = require('../lib/util/logger');
+let logger = new Logger();
+
+const Migration = require('../lib/migration');
+
+const Table = require('cli-table');
+
+logger.category = 'Migration Status';
+
+program
+    .version(require('../package').version)
+    .description('Exibe relatório com status atual da migração')
+    .option('-p, --path <directory>', 'Diretório de migração. Padrão: ./data')
+    .parse(process.argv);
+
+
+let migration = new Migration();
+
+
+console.log(chalk.magenta.bold('------------------------- Sindri Migration - Status Atual -------------------------\n'));
+
+
+migration.validate()
+    .then(() => {
+
+        let currentRevision = parseInt(migration.currentRevision);
+
+        let revisionInfo = currentRevision == 0 ? 'Migração ainda não foi iniciada.' : currentRevision;
+
+        // atual da base de dados
+        console.log(`${chalk.blue.bold('Revisão Atual:')} ${chalk.green.bold(revisionInfo)}`);
+
+        // Listar Revisões disponíveis (10 antigas - 10 pra frente)
+
+        console.log(`${chalk.blue.bold('Lista de Revisões:')} `);
+        migration.getListRevisions(currentRevision - 10, currentRevision + 10)
+            .then(list => {
+
+
+                let table = new Table({head: [chalk.blue.bold('Atual'), chalk.blue.bold('Revisão'), chalk.blue.bold('Data')]});
+
+
+                if (currentRevision == 0) {
+
+                    table.push([chalk.bold.green('\u25B6'), 'r0', 'Não Iniciado']);
+                }
+
+                for (let item of list) {
+
+                    let [revision, date] = item;
+
+                    let current = (revision === currentRevision ? chalk.bold.green('\u25B6') : '');
+                    table.push([current, `r${revision}`, date]);
+
+                }
+
+
+                console.log(table.toString());
+
+            });
+
+
+    })
+    .catch(err => {
+
+        logger.error(chalk.red.bold(err.message));
+
+        logger.debug('------ ERRO ------');
+        logger.debug(err.message);
+        logger.debug('------ STACK ------');
+        logger.debug(err.stack);
+        logger.debug('-------------------');
+
+    });
+
+
+
