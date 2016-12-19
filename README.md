@@ -98,36 +98,13 @@ Dentro de /data temos os seguintes diretórios:
 
 **Nota**: Está configuração pode ser personalizada
 
+***TODO:***
+* Criar data-00001.sql para gerar novos datos (pensar melhor)
 
-***TODO:*** Criar data-00001.sql para gerar novos datos (pensar melhor)
 
-Scripts para criação e migração de estrutura de banco de dados
-
-> Configuração da base por arquivo de configuração em vez de parâmetros
-
-> Source vai sair, Schemas serão criados diretamente dos arquivos yaml
-
-> create-schema  vai sair, vamos ter apenas create-migration.
 
 
 #### Módulo dia-parser
 * dia2yaml (Implementado)
 * yaml2dia (Não Implementado)
-
---
-### Sindri Migration
-
-* init
-* create-migration
-* show-migration
-* run-migration
-* generate-database-from-dia
-* generate-database-from-yaml
-
---
-
-Separar bem oq é da interface e oq é do script de migração
-Pensar em permitir usar o script independente da interface
-
-Fragmentar bem em classe/objeto ( Separação de Responsabilidade )
 
