@@ -1,6 +1,6 @@
 {
   "name": "sindri-migration",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Gera Migração automatica baseado em schema",
   "main": "index.js",
   "bin": {
