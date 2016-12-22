@@ -38,6 +38,27 @@ class UiPrompt {
             .then(result => result.confirm);
 
     }
+
+
+    /**
+     * Apresenta uma Lista pro usuario selecionar
+     * @param question
+     * @param list
+     * @param def
+     */
+    checkbox(question, list, def = []) {
+
+        return inquirer
+            .prompt([{
+                type: 'checkbox',
+                name: 'check',
+                message: question,
+                choices: list,
+                'default': def
+            }])
+            .then(result => result.check);
+
+    }
 }
 
 

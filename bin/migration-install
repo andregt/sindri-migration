@@ -1,0 +1,62 @@
+#!/usr/bin/env node
+/**
+ * **Created on 22/12/16**
+ *
+ * sindri-migration/bin/migration-install.js
+ * @author André Timermann <andre.timermann@smarti.io>
+ *
+ *
+ * Instala Modelos (yaml) localizados em modulos instalados via npm, procedimento obrigatório ao utilizar aplicações externas que utilizem a base
+ *
+ */
+'use strict';
+
+
+const program = require('commander');
+const chalk = require('chalk');
+
+
+const Logger = require('../lib/util/logger');
+
+
+const Migration = require('../lib/migration');
+
+const path = require('path');
+
+program
+    .version(require('../package').version)
+    .description('Instala Modelos (yaml) localizados em modulos instalados via npm, procedimento obrigatório ao utilizar aplicações externas que utilizem a base')
+    .option('-d, --debug', 'Modo Depuração.')
+    .option('-p, --path <directory>', 'Diretório de migração. Padrão: ./data')
+    .parse(process.argv);
+
+
+let level;
+if (program.debug) level = 'DEBUG';
+if (program.trace) level = 'TRACE';
+
+let logger = new Logger(null, level);
+logger.category = 'migration-install';
+
+let migration = new Migration({
+    logger: logger
+});
+
+
+console.log(chalk.magenta.bold('------------------------- Sindri Migration - Status Atual -------------------------\n'));
+
+
+migration
+    .install()
+    .catch(err => {
+
+        logger.error(chalk.red.bold(err.message));
+
+        logger.debug('------ ERRO ------');
+        logger.debug(err.message);
+        logger.debug('------ STACK ------');
+        logger.debug(err.stack);
+        logger.debug('-------------------');
+
+    });
+

@@ -1,0 +1,81 @@
+#!/usr/bin/env node
+/**
+ * **Created on 22/12/16**
+ *
+ * sindri-migration/bin/migration-dia2yaml
+ * @author André Timermann <andre.timermann@smarti.io>
+ *
+ * Converte Diagrama DIA em YAML
+ *
+ */
+'use strict';
+
+
+const program = require('commander');
+const chalk = require('chalk');
+
+const Logger = require('../lib/util/logger');
+let logger = new Logger();
+logger.category = 'MigrationDia2yaml';
+
+const MigrationDirectory = require('../lib/migrationDirectory');
+
+const DiaParser = require('dia-parser');
+
+const path = require('path');
+
+const fs = require('fs');
+
+program
+    .version(require('../package').version)
+    .description('Converte Diagrama DIA em YAML')
+    .option('-p, --path <directory>', 'Diretório de migração. Padrão: ./data')
+    .option('-f, --file <diagram>', 'Diagrama que será convertido')
+    .option('-l, --list', 'Lista diagramas')
+    .parse(process.argv);
+
+
+let migrationDirectory = new MigrationDirectory({
+    path: program.path
+});
+
+
+// TODO: Criar Confirmação se deseja substituir schema atual
+// TODO: Remover arquivos antigos na pasta migration/schema
+// TODO: Opção de carregar ultima versão
+// TODO: Listar diagramas disponíveis ex: diagramaa-00023 e diagrama_b-00001 deve exibir diagramaa e diagramab
+// TODO: usar inquirer (ui)
+// TODO: Permitir salvar modelos em subdiretorio para melhor organização (Migration deve ser compatível para carregar desta forma)
+
+if (program.list) {
+
+    logger.info('Listando Diretório: ' + migrationDirectory.dirDiagram);
+
+    fs.readdir(migrationDirectory.dirDiagram, (err, files) => {
+
+        for(let file of files){
+            console.log('- ' + file);
+        }
+
+    });
+
+
+} else if (!program.file) {
+
+    logger.error(chalk.red('Argumento -f ou --file obrigatório. (Necessário espificiar diagrama a ser convertido'));
+    process.exit(1);
+
+} else {
+
+    let diaParser = new DiaParser();
+
+    diaParser.loadDia(path.join(migrationDirectory.dirDiagram, program.file))
+
+        .then(data => {
+
+            // Realiza Validação dos Modelos, e grava resultado na pasta output
+            diaParser.build('yamlSql', data, migrationDirectory.dirModels);
+
+        });
+
+}

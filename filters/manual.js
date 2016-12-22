@@ -1,7 +1,8 @@
 /**
  * **Created on 17/07/16**
  *
- * <File Reference Aqui: manual>
+ * sindri-migration/filters/manual.js
+ *
  * @author André Timermann <andre@andregustvo.org>
  *
  */

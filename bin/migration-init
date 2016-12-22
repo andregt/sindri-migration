@@ -1,8 +1,49 @@
 #!/usr/bin/env node
-
 /**
- * Created by André Timermann on 16/12/16.
+ * **Created on 22/12/16**
  *
+ * sindri-migration/bin/migration-init *
+ * @author André Timermann <andre.timermann@smarti.io>
+ *
+ * Inicializa Estrutura de Diretório da Migração
  *
  */
 'use strict';
+
+
+const program = require('commander');
+const chalk = require('chalk');
+
+const Logger = require('../lib/util/logger');
+let logger = new Logger();
+logger.category = 'MigrationInit';
+
+const MigrationDirectory = require('../lib/migrationDirectory');
+
+program
+    .version(require('../package').version)
+    .description('Inicializa Estrutura de Diretório da Migração')
+    .option('-p, --path <directory>', 'Diretório de migração. Padrão: ./data')
+    .parse(process.argv);
+
+
+let migrationDirectory = new MigrationDirectory({
+    path: program.path
+});
+
+migrationDirectory.createStructure()
+
+    .then(() => {
+
+        logger.info("OK");
+
+    })
+    .catch(err => {
+
+        if (err.code === 'EEXIST') {
+            logger.error(chalk.red("Estrutura de Diretório já existe!"))
+        } else {
+            throw err;
+        }
+
+    })
