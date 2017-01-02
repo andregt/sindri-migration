@@ -28,6 +28,7 @@ program
     .description('Instala Modelos (yaml) localizados em modulos instalados via npm, procedimento obrigatório ao utilizar aplicações externas que utilizem a base')
     .option('-d, --debug', 'Modo Depuração.')
     .option('-p, --path <directory>', 'Diretório de migração. Padrão: ./data')
+    .option('-t, --trace', 'Modo Trace.')
     .parse(process.argv);
 
 

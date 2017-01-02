@@ -14,19 +14,29 @@ const chalk = require('chalk');
 const MigrationCreator = require('../lib/migrationCreator');
 
 const Logger = require('../lib/util/logger');
-let logger = new Logger();
 
-logger.category = 'Migration Create';
+
 
 program
     .version(require('../package').version)
     .description(`Cria uma nova versão do schema atual para migração.\n\n\t${chalk.bold('Nota:')} Use o comando 'migration' para migrar a base de dados entre as versões disponíveis.`)
+    .option('-d, --debug', 'Modo Depuração.')
     .option('-p, --path <directory>', 'Diretório de migração. Padrão: ./data')
+    .option('-t, --trace', 'Modo Trace.')
     .parse(process.argv);
 
 
+let level;
+if (program.debug) level = 'DEBUG';
+if (program.trace) level = 'TRACE';
+
+let logger = new Logger(null, level);
+logger.category = 'MigrationCreate';
+
+
 let migrationCreator = new MigrationCreator({
-    dataPath: program.path
+    dataPath: program.path,
+    logger: logger
 });
 
 migrationCreator

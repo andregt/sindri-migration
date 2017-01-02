@@ -73,6 +73,8 @@ migration
         logger.debug(err.stack);
         logger.debug('-------------------');
 
+        process.exit();
+
     });
 
 
