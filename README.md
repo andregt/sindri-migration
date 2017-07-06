@@ -1,34 +1,85 @@
 # sindri-migration
 
-Módulo para gerenciamento de Migrações através de Arquivos YAML e Diagrama DIA
+SindriMigration é um sistema de migração que funciona através de arquivos YAML, que podem ser criados diretamente, ou gerados à partir de diagramas no formato DIA
+
+# Como Usar
+
+Primeiro você precisa criar os modelos, que representam as tabelas no banco de dados.
+Você tem duas opções aqui:
+
+* Criar os modelos diretamente em yaml
+* Criar os modelos visualmente através de diagrama no formado dia
+
+### 1) Criando Diagrama
+
+Você deve criar os diagramas e salvar na pasta:
+
+    data/diagram
+
+Então pode converte-los para modelo yaml usando o comando:
+
+    migration dia2yaml -f <nome_do_arquivo_na_pasta_diagram>
+
+Serão criados automaticamente arquivos para cada tabela criada:
+
+    data/model/<nome_da_tabela>.yaml
+
+### 2) Criando Modelos
+
+
+### 3) Criando Migração (Versão da base de dados)
+
+
+### 4) Executando uma Migração
+
+Quando você inicia um novo banco de dados vazio, significa que você está na revisão 0, ou seja nenhum estrutura foi criada ainda.
+
+Para isso (por enquanto) você pode gerar a primeira versão usando o comando:
+
+    migration reset
+
+
+Ele vai apagar o banco de dados atual (cuidado) e recriar a estrutura do zero na revisão desejada (por padrão 1)
+
+portanto execute
+
+    migration reset
+
+Por enquanto a migração em si ainda não foi implementado, então só lhe resta utilizar este comando parar criar nova versão da base de dados
+
+No futuro usaremos os script up e down
 
 # Componentes 
 
-Todo Sistema de Migração é organizados nos seguintes componentes:
+O Sistema de Migração é organizados nos seguintes componentes:
 
 ## 1) Dia2yaml
 
-Componente responsável por converter diagramas dia para YAML;
+Responsável por converter diagramas para yaml.
 
-É usado um módulo externo chamado dia-parser
+É opcional, você pode gerar os modelos diretamente em yaml.
 
-TODO: Desenvolver o módulo para converter yaml para DIA
+TODO: Atualmente só é possível converter diagramas em modelos yaml, implementar o caminho inverso (Atualmente caso crie em YAML, não é mais possível continuar criando diagramas)
 
 ## 2) Schema Install
 
-Procura schemas nos submodulos e instala ou atualiza
+Instala Modelos (yaml) localizados em modulos instalados via npm, procedimento obrigatório ao utilizar aplicações externas.
 
 
 ## 3) Migration Creator
 
-Migration Creator é o componente responsável por criar novas migrações, carregando, processando, validando e salvando schemas schemas no formato usado interno (JSON);
+Cria novas migrações, cada migração representa um estado do banco de dados ou ainda uma nova versão do banco de dados atual.
+Permitindo migrar o projeto de uma versão do banco de dados para outra mais recente com facilidade.
+
+MigrationCreator irá criar as migrações, validar e salvar internamente (JSON).
+Importante notar que aqui apenas estamos criando migrações, não estamos realizando a migração.
+
+
 Ao salvar um novo schema é gerado uma migração que é o conjunto de duas versões do schemas, e uma solução.
-
 Desta forma o Migration Creator é dividido nos seguintes Sub-Componentes
-
 Verifica se existe algum schema não instalado e avisa
 
-### 3.1) Schema
+### 3.1) Schemas
 
 Componente que representa um schema, com as seguintes funções:
 * Gera schemas à partir de um ou mais diretórios carregando todos os arquivos no formato yaml (cada arquivo representa uma tabela)
@@ -70,12 +121,12 @@ Manipula Migrações, lista todas as migrações disponíveis por id e data e ex
 
 # Entendendo a Aplicabilidade da Herança
 
-Um caso de uso que insirou a criação deste componente é o sindri-admin, módulo administrador básico.
+Um caso de uso que inspirou a criação deste componente é o sindri-admin, módulo administrador básico.
 
 Muitos casos nosso projeto já precisa de um administrador parecido, porém com alguns campos diferentes.
 Neste caso usamos a herança pra reaproveitar o schema já definido e aplicar algumas alterações
 
-**Alternativa**: apenas copiar os schemas e adaptar 
+**Alternativa**: apenas copiar os schemas e adaptar
 **Problema:** Se houver alguma atualização do admin, essa atualização é perdida
     Isso é ruim ou bom? pode ser que a atualização quebre o sistema, neste caso melhor fazer ajuste manual
 

@@ -62,7 +62,7 @@ if (program.list) {
 
 } else if (!program.file) {
 
-    logger.error(chalk.red('Argumento -f ou --file obrigatório. (Necessário espificiar diagrama a ser convertido'));
+    logger.error(chalk.red('Argumento -f ou --file obrigatório. (Necessário espificiar diagrama a ser convertido)\n\tIMPORTANTE: Deve ser relativo ao diretório data/diagram'));
     process.exit(1);
 
 } else {

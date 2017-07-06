@@ -4,8 +4,7 @@
   "description": "Gera Migração automatica baseado em schema",
   "main": "index.js",
   "bin": {
-    "migration": "bin/migration",
-    "migration-create": "bin/migration-create"
+    "migration": "bin/migration"
   },
   "dependencies": {
     "blessed": "^0.1.81",

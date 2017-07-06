@@ -19,8 +19,8 @@ program
     .command('create', 'Cria uma nova migração, nova versão da base de dados')
     .command('init', 'Inicializa estrutura de diretório')
     .command('install', 'Instala Modelos (yaml) localizados em modulos instalados via npm, procedimento obrigatório ao utilizar aplicações externas que utilizem a base')
-    .command('list', 'Lista todas as reviões disponíveis')
-    .command('reset', 'Reinicia Estado da Base de dados para uma versão especifica sem realizar migração (Perde todos os dados')
+    .command('list', 'Lista todas as revisões disponíveis')
+    .command('reset', 'Reinicia Estado da Base de dados para uma versão especifica sem realizar migração (Perde todos os dados)')
     .command('status', 'Exibe relatório com status atual da migração');
 
 
@@ -39,10 +39,12 @@ program.parse(process.argv);
 // TODO: Seguir padrão do Vuejs para criar script
 
 // Scripts a serem criados:
+
 // dia2yaml (Script para converter DIA para YAML) ok Funcionando
 // init (Criar Estrutura de diretório)
-// create-migration
-// run-migration
+// migration-create
+// migration-up
+// migration-down
 
 // Algoritmo
 
