@@ -27,8 +27,10 @@ Serão criados automaticamente arquivos para cada tabela criada:
 ### 2) Criando Modelos
 
 
+
 ### 3) Criando Migração (Versão da base de dados)
 
+    migration create
 
 ### 4) Executando uma Migração
 

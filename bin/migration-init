@@ -35,15 +35,15 @@ migrationDirectory.createStructure()
 
     .then(() => {
 
-        logger.info("OK");
+        logger.info('OK');
 
     })
     .catch(err => {
 
         if (err.code === 'EEXIST') {
-            logger.error(chalk.red("Estrutura de Diretório já existe!"))
+            logger.error(chalk.red('Estrutura de Diretório já existe!'));
         } else {
             throw err;
         }
 
-    })
+    });
